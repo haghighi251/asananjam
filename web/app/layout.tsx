@@ -1,12 +1,15 @@
-import "./globals.css";
-import { Inter } from "next/font/google";
+import Head from "@/components/head";
+import { PersistGate } from "redux-persist/integration/react";
+import { Provider } from "react-redux";
+import store, { persistor } from "@/services/Redux/store";
+import "../public/assets/css/index.css";
+import TopMenu from "@/components/TopNav/TopMenu";
+import { Providers } from "@/services/Redux/provider";
 
-const inter = Inter({ subsets: ["latin"] });
-
-export const metadata = {
-  title: "آسان انجام",
-  description: "پلتفرم خرید و فروش رایگان کالا و خدمات",
-};
+// export const metadata = {
+//   title: "آسان انجام",
+//   description: "پلتفرم خرید و فروش رایگان کالا و خدمات",
+// };
 
 export default function RootLayout({
   children,
@@ -17,7 +20,13 @@ export default function RootLayout({
     <html
       dir="rtl"
       lang="fa">
-      <body className={inter.className}>{children}</body>
+      <Head />
+      <body>
+        <Providers>
+          <TopMenu />
+          {children}
+        </Providers>
+      </body>
     </html>
   );
 }

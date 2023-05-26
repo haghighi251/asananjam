@@ -1,7 +1,4 @@
-"use client";
-import { Button } from "@mui/material";
-
-export default function Home() {
+export default function page() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <div className="flex w-full mx-4 border border-slate-400">
