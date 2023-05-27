@@ -5,13 +5,20 @@ import { type NextRequest } from "next/server";
 import bcrypt from "bcryptjs";
 import { IUsersSchema, IUsersOptionsSchema } from "@/utils/types";
 import connectMongo from "@/utils/connectMongo";
+const mongoose = require("mongoose");
 
 export async function POST(request: NextRequest) {
   try {
     await connectMongo();
+    console.log(
+      "Mongoose connection status is: " + mongoose.connection.readyState
+    );
     const randomNumber = Math.floor(Math.random() * 1000000)
       .toString()
       .padStart(6, "0");
+    const uniqueCode = Math.floor(Math.random() * 100000000)
+      .toString()
+      .padStart(8, "0");
     const body = await request.json();
     let freeToSendSms = true;
 
@@ -33,8 +40,10 @@ export async function POST(request: NextRequest) {
     } else {
       // The request is for a new user
       const newUser: IUsersSchema = new UsersSchema({
+        username: body.mobile,
         mobile: body.mobile,
-        status: false,
+        uniqueCode: uniqueCode,
+        activationCode: randomNumber,
       });
 
       // Hash password using bcrypt and save user to database
@@ -55,10 +64,13 @@ export async function POST(request: NextRequest) {
             .save()
             .then(() => {})
             .catch((error) => {
+              console.log(error);
+              console.log(2);
               freeToSendSms = false;
             });
         })
         .catch((error) => {
+          console.log(error);
           freeToSendSms = false;
         });
     }
